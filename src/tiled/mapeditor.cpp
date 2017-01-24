@@ -316,9 +316,10 @@ void MapEditor::addDocument(Document *document)
         view->horizontalScrollBar()->setSliderPosition(hor);
         view->verticalScrollBar()->setSliderPosition(ver);
 
-        int layer = mapState.value(QLatin1String("selectedLayer")).toInt();
-        if (layer > 0 && layer < mapDocument->map()->layerCount())
-            mapDocument->setCurrentLayerIndex(layer);
+        // todo: find a way to restore selected layer
+//        int layer = mapState.value(QLatin1String("selectedLayer")).toInt();
+//        if (layer > 0 && layer < mapDocument->map()->layerCount())
+//            mapDocument->setCurrentLayerIndex(layer);
     }
 }
 
@@ -336,7 +337,8 @@ void MapEditor::removeDocument(Document *document)
         mapState.insert(QLatin1String("scale"), mapView->zoomable()->scale());
         mapState.insert(QLatin1String("scrollX"), mapView->horizontalScrollBar()->sliderPosition());
         mapState.insert(QLatin1String("scrollY"), mapView->verticalScrollBar()->sliderPosition());
-        mapState.insert(QLatin1String("selectedLayer"), mapDocument->currentLayerIndex());
+        // todo: find a good way to store a layer reference now that it is a hierarchy
+        //mapState.insert(QLatin1String("selectedLayer"), mapDocument->currentLayerIndex());
         mMapStates.insert(mapDocument->fileName(), mapState);
 
         Preferences *prefs = Preferences::instance();
@@ -380,7 +382,7 @@ void MapEditor::setCurrentDocument(Document *document)
     mMiniMapDock->setMapDocument(mapDocument);
 
     if (mapDocument) {
-        connect(mapDocument, &MapDocument::currentLayerIndexChanged,
+        connect(mapDocument, &MapDocument::currentLayerChanged,
                 this, &MapEditor::updateLayerComboIndex);
 //        connect(mapDocument, SIGNAL(selectedAreaChanged(QRegion,QRegion)),
 //                SLOT(updateActions()));
@@ -642,18 +644,22 @@ void MapEditor::layerComboActivated(int index)
     if (!mCurrentMapDocument)
         return;
 
-    if (index != mCurrentMapDocument->currentLayerIndex())
-        mCurrentMapDocument->setCurrentLayerIndex(index);
+    // todo: figure out how to work with a tree in the layer combo box
+//    if (index != mCurrentMapDocument->currentLayerIndex())
+//        mCurrentMapDocument->setCurrentLayerIndex(index);
 }
 
 void MapEditor::updateLayerComboIndex()
 {
-    int layerIndex = -1;
+    // todo: figure out how to work with a tree in the layer combo box
+//    int layerIndex = -1;
 
-    if (mCurrentMapDocument)
-        layerIndex = mCurrentMapDocument->currentLayerIndex();
+//    if (mCurrentMapDocument) {
+//        const auto currentLayer = mCurrentMapDocument->currentLayer();
+//        layerIndex = mCurrentMapDocument->layerIndex(currentLayer);
+//    }
 
-    mLayerComboBox->setCurrentIndex(layerIndex);
+//    mLayerComboBox->setCurrentIndex(layerIndex);
 }
 
 void MapEditor::setupQuickStamps()
